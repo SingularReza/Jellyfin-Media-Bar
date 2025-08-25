@@ -845,9 +845,9 @@ const SlideCreator = {
       "div",
       {
         className: "plot",
-      },
-      SlideUtils.formatMarkdownLinks(plot)
+      }
     );
+    plotElement.innerHTML = SlideUtils.formatMarkdownLinks(plot)
     SlideUtils.truncateText(plotElement, CONFIG.maxPlotLength);
 
     const plotContainer = SlideUtils.createElement("div", {
