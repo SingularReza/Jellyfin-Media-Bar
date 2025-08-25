@@ -353,12 +353,48 @@ const SlideUtils = {
    * @param {number} maxLength - Maximum length before truncation
    */
   truncateText(element, maxLength) {
-    if (!element) return;
-
-    const text = element.innerText || element.textContent;
-    if (text && text.length > maxLength) {
-      element.innerText = text.substring(0, maxLength) + "...";
-    }
+      if (!element) return;
+    
+      const text = element.innerText || element.textContent;
+      if (!text) return;
+    
+      // Convert [text](url) markdown into <a href="url">text</a>
+      const markdownPattern = /\[([^\]]+)\]\(([^)]+)\)/g;
+      let html = text.replace(markdownPattern, '<a href="$2" target="_blank">$1</a>');
+    
+      // Create a temp div to measure visible text length safely
+      const tempDiv = document.createElement("div");
+      tempDiv.innerHTML = html;
+    
+      // Get the plain visible text length
+      const plainText = tempDiv.innerText || tempDiv.textContent;
+    
+      if (plainText.length > maxLength) {
+        // Truncate while keeping HTML structure intact
+        let truncated = "";
+        let currentLength = 0;
+    
+        const walker = document.createTreeWalker(tempDiv, NodeFilter.SHOW_TEXT, null);
+        while (walker.nextNode()) {
+          const node = walker.currentNode;
+          const remaining = maxLength - currentLength;
+    
+          if (remaining <= 0) {
+            node.nodeValue = "";
+            continue;
+          }
+    
+          if (node.nodeValue.length > remaining) {
+            node.nodeValue = node.nodeValue.substring(0, remaining) + "...";
+          }
+    
+          currentLength += node.nodeValue.length;
+        }
+    
+        html = tempDiv.innerHTML;
+      }
+    
+      element.innerHTML = html;
   },
 
   /**
