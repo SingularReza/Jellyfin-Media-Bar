@@ -354,47 +354,26 @@ const SlideUtils = {
    */
   truncateText(element, maxLength) {
     if (!element) return;
-  
+
     const text = element.innerText || element.textContent;
-    if (!text) return;
-  
-    // Convert [text](url) markdown into <a href="url">text</a>
-    const markdownPattern = /\[([^\]]+)\]\(([^)]+)\)/g;
-    let html = text.replace(markdownPattern, '<a href="$2" target="_blank">$1</a>');
-  
-    // Create a temp div to measure visible text length safely
-    const tempDiv = document.createElement("div");
-    tempDiv.innerHTML = html;
-  
-    // Get the plain visible text length
-    const plainText = tempDiv.innerText || tempDiv.textContent;
-  
-    if (plainText.length > maxLength) {
-      // Truncate while keeping HTML structure intact
-      let truncated = "";
-      let currentLength = 0;
-  
-      const walker = document.createTreeWalker(tempDiv, NodeFilter.SHOW_TEXT, null);
-      while (walker.nextNode()) {
-        const node = walker.currentNode;
-        const remaining = maxLength - currentLength;
-  
-        if (remaining <= 0) {
-          node.nodeValue = "";
-          continue;
-        }
-  
-        if (node.nodeValue.length > remaining) {
-          node.nodeValue = node.nodeValue.substring(0, remaining) + "...";
-        }
-  
-        currentLength += node.nodeValue.length;
-      }
-  
-      html = tempDiv.innerHTML;
+    if (text && text.length > maxLength) {
+      element.innerText = text.substring(0, maxLength) + "...";
     }
-  
-    element.innerHTML = html;
+  },
+
+  formatMarkdownLinks(input) {
+    if (!input || typeof input !== "string") return input;
+
+    // Matches: [link text](url) or [link text](url "optional title")
+    // Groups: 1=text, 2=url, 4=title (optional, quoted)
+    const mdLinkRegex = /\[([^\]]+)\]\(\s*([^)\s]+)(\s+"([^"]*)")?\s*\)/g;
+
+    return input.replace(mdLinkRegex, (_m, text, url, _tgrp, title) => {
+      const safeText = text;
+      const safeUrl = url;
+      const titleAttr = title ? ` title="${title}"` : "";
+      return `<a href="${safeUrl}" target="_blank" rel="noopener noreferrer"${titleAttr}>${safeText}</a>`;
+    })
   },
 
   /**
@@ -867,7 +846,7 @@ const SlideCreator = {
       {
         className: "plot",
       },
-      plot
+      formatMarkdownLinks(plot)
     );
     SlideUtils.truncateText(plotElement, CONFIG.maxPlotLength);
 
