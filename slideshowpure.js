@@ -846,7 +846,7 @@ const SlideCreator = {
       {
         className: "plot",
       },
-      formatMarkdownLinks(plot)
+      SlideUtils.formatMarkdownLinks(plot)
     );
     SlideUtils.truncateText(plotElement, CONFIG.maxPlotLength);
 
