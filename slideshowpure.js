@@ -1231,6 +1231,10 @@ const SlideshowManager = {
 
       if (previousVisibleSlide) {
         previousVisibleSlide.classList.remove("active");
+        const prevBackdrop = previousVisibleSlide.querySelector(".backdrop");
+        const prevLogo = previousVisibleSlide.querySelector(".logo");
+        if (prevBackdrop) prevBackdrop.classList.remove("animate");
+        if (prevLogo) prevLogo.classList.remove("animate");
       }
 
       currentSlide.classList.add("active");
