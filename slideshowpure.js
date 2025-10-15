@@ -24,6 +24,7 @@ const CONFIG = {
   maxItems: 500,
   preloadCount: 3,
   fadeTransitionDuration: 500,
+  slideAnimationEnabled: true,
 };
 
 // State management
@@ -1236,8 +1237,10 @@ const SlideshowManager = {
 
       currentSlide.classList.add("active");
 
-      currentSlide.querySelector(".backdrop").classList.add("animate");
-      currentSlide.querySelector(".logo").classList.add("animate");
+      if (CONFIG.slideAnimationEnabled) {
+        currentSlide.querySelector(".backdrop").classList.add("animate");
+        currentSlide.querySelector(".logo").classList.add("animate");
+      }
 
       STATE.slideshow.currentSlideIndex = index;
 
@@ -1271,7 +1274,7 @@ const SlideshowManager = {
       setTimeout(() => {
         STATE.slideshow.isTransitioning = false;
 
-        if (previousVisibleSlide) {
+        if (previousVisibleSlide && CONFIG.slideAnimationEnabled) {
           const prevBackdrop = previousVisibleSlide.querySelector(".backdrop");
           const prevLogo = previousVisibleSlide.querySelector(".logo");
           if (prevBackdrop) prevBackdrop.classList.remove("animate");
