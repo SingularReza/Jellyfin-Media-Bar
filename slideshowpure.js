@@ -1,5 +1,5 @@
 /*
- * Jellyfin Slideshow by M0RPH3US v3.0.1
+ * Jellyfin Slideshow by M0RPH3US v3.0.2
  */
 
 //Core Module Configuration
@@ -41,6 +41,7 @@ const STATE = {
   slideshow: {
     hasInitialized: false,
     isTransitioning: false,
+    isPaused: false,
     currentSlideIndex: 0,
     focusedSlide: null,
     containerFocused: false,
@@ -157,6 +158,7 @@ const initLoadingScreen = () => {
   const currentPath = window.location.href.toLowerCase();
   const isHomePage =
     currentPath.includes("/web/#/home.html") ||
+    currentPath.includes("/web/#/home") ||
     currentPath.includes("/web/index.html#/home.html") ||
     currentPath.endsWith("/web/");
 
@@ -250,6 +252,7 @@ const resetSlideshowState = () => {
 
   STATE.slideshow.hasInitialized = false;
   STATE.slideshow.isTransitioning = false;
+  STATE.slideshow.isPaused = false;
   STATE.slideshow.currentSlideIndex = 0;
   STATE.slideshow.focusedSlide = null;
   STATE.slideshow.containerFocused = false;
@@ -733,13 +736,14 @@ const VisibilityObserver = {
     if (!container) return;
 
     const isVisible =
-      window.location.hash.includes("#/home.html") &&
+        (window.location.hash === "#/home.html" ||
+         window.location.hash === "#/home") &&
       activeTab.getAttribute("data-index") === "0";
 
     container.style.display = isVisible ? "block" : "none";
 
     if (isVisible) {
-      if (STATE.slideshow.slideInterval) {
+      if (STATE.slideshow.slideInterval && !STATE.slideshow.isPaused) {
         STATE.slideshow.slideInterval.start();
       }
     } else {
@@ -1073,7 +1077,7 @@ const SlideCreator = {
 
   createFavoriteButton(item) {
     const isFavorite = item.UserData && item.UserData.IsFavorite === true;
-    
+
     const button = SlideUtils.createElement("button", {
       className: `favorite-button ${isFavorite ? "favorited" : ""}`,
       tabIndex: "0",
@@ -1263,7 +1267,7 @@ const SlideshowManager = {
       this.preloadAdjacentSlides(index);
       this.updateDots();
 
-      if (STATE.slideshow.slideInterval) {
+      if (STATE.slideshow.slideInterval && !STATE.slideshow.isPaused) {
         STATE.slideshow.slideInterval.restart();
       }
 
@@ -1374,6 +1378,18 @@ const SlideshowManager = {
     });
   },
 
+  togglePause() {
+      STATE.slideshow.isPaused = !STATE.slideshow.isPaused;
+      const pauseButton = document.querySelector('.pause-button');
+      if (STATE.slideshow.isPaused) {
+          STATE.slideshow.slideInterval.stop();
+          pauseButton.innerHTML = '<i class="material-icons">play_arrow</i>';
+      } else {
+          STATE.slideshow.slideInterval.start();
+          pauseButton.innerHTML = '<i class="material-icons">pause</i>';
+      }
+  },
+
   /**
    * Initializes touch events for swiping
    */
@@ -1447,6 +1463,11 @@ const SlideshowManager = {
           e.preventDefault();
           break;
 
+        case " ": // Space bar
+            this.togglePause();
+            e.preventDefault();
+            break;
+
         case "Enter":
           focusElement.click();
           e.preventDefault();
@@ -1488,7 +1509,9 @@ const SlideshowManager = {
       await this.updateCurrentSlide(0);
 
       STATE.slideshow.slideInterval = new SlideTimer(() => {
-        this.nextSlide();
+        if (!STATE.slideshow.isPaused) {
+            this.nextSlide();
+        }
       }, CONFIG.shuffleInterval);
     } catch (error) {
       console.error("Error loading slideshow data:", error);
@@ -1536,8 +1559,20 @@ const initArrowNavigation = () => {
     },
   });
 
+  const pauseButton = SlideUtils.createElement("div", {
+      className: "pause-button",
+      innerHTML: '<i class="material-icons">pause</i>',
+      tabIndex: "0",
+      onclick: (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          SlideshowManager.togglePause();
+      }
+  });
+
   container.appendChild(leftArrow);
   container.appendChild(rightArrow);
+  container.appendChild(pauseButton);
 
   const showArrows = () => {
     leftArrow.style.display = "block";
