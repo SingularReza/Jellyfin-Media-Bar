@@ -1,5 +1,5 @@
 /*
- * Jellyfin Slideshow by M0RPH3US v3.0.2
+ * Jellyfin Slideshow by M0RPH3US v3.0.3
  */
 
 //Core Module Configuration
