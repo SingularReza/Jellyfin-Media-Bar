@@ -1318,15 +1318,15 @@ const SlideshowManager = {
   },
 
   togglePause() {
-      STATE.slideshow.isPaused = !STATE.slideshow.isPaused;
-      const pauseButton = document.querySelector('.pause-button');
-      if (STATE.slideshow.isPaused) {
-          STATE.slideshow.slideInterval.stop();
-          pauseButton.innerHTML = '<i class="material-icons">play_arrow</i>';
-      } else {
-          STATE.slideshow.slideInterval.start();
-          pauseButton.innerHTML = '<i class="material-icons">pause</i>';
-      }
+    STATE.slideshow.isPaused = !STATE.slideshow.isPaused;
+    const pauseButton = document.querySelector('.pause-button');
+    if (STATE.slideshow.isPaused) {
+      STATE.slideshow.slideInterval.stop();
+      pauseButton.innerHTML = '<i class="material-icons">play_arrow</i>';
+    } else {
+      STATE.slideshow.slideInterval.start();
+      pauseButton.innerHTML = '<i class="material-icons">pause</i>';
+    }
   },
 
   /**
@@ -1403,9 +1403,9 @@ const SlideshowManager = {
           break;
 
         case " ": // Space bar
-            this.togglePause();
-            e.preventDefault();
-            break;
+          this.togglePause();
+          e.preventDefault();
+          break;
 
         case "Enter":
           focusElement.click();
@@ -1449,7 +1449,7 @@ const SlideshowManager = {
 
       STATE.slideshow.slideInterval = new SlideTimer(() => {
         if (!STATE.slideshow.isPaused) {
-            this.nextSlide();
+          this.nextSlide();
         }
       }, CONFIG.shuffleInterval);
     } catch (error) {
@@ -1499,14 +1499,14 @@ const initArrowNavigation = () => {
   });
 
   const pauseButton = SlideUtils.createElement("div", {
-      className: "pause-button",
-      innerHTML: '<i class="material-icons">pause</i>',
-      tabIndex: "0",
-      onclick: (e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          SlideshowManager.togglePause();
-      }
+    className: "pause-button",
+    innerHTML: '<i class="material-icons">pause</i>',
+    tabIndex: "0",
+    onclick: (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      SlideshowManager.togglePause();
+    }
   });
 
   container.appendChild(leftArrow);
