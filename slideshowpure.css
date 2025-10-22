@@ -378,6 +378,9 @@
 }
 
 .genre {
+  display: flex;
+  gap: 5px;
+  align-items: center;
   position: absolute;
   top: calc(50% + 4vh);
   left: 4vw;
@@ -500,14 +503,13 @@
   align-items: center;
   z-index: 5;
   position: relative;
+  gap: 10px;
 }
 
 .runTime {
   font-family: "Archivo Narrow", sans-serif;
   display: flex;
   align-items: center;
-  margin-left: 5px;
-  margin-right: 5px;
   align-content: center;
   justify-content: center;
   flex-wrap: wrap;
@@ -523,6 +525,11 @@
   width: auto !important;
 }
 
+.star-rating-container {
+  display: flex;
+  align-items: center;
+}
+
 /* Rotten Tomatoes Critic Rating Styles */
 
 .critic-rating {
@@ -530,6 +537,7 @@
   align-items: center;
   display: flex;
   min-height: 1.2em;
+  gap: 0.25em;
 }
 
 /**/
@@ -537,8 +545,6 @@
 .age-rating {
   display: flex;
   align-items: center;
-  margin-left: 5px;
-  margin-right: 5px;
   border-radius: 5px;
   background: rgb(255 255 255 / 0.8);
   color: #000;
@@ -553,16 +559,12 @@
   font-weight: 500;
   display: flex;
   align-items: center;
-  margin-left: 5px;
-  margin-right: 5px;
   flex-wrap: wrap;
   align-content: center;
   justify-content: center;
 }
 
 .separator-icon {
-  margin-left: 5px;
-  margin-right: 5px;
   font-size: 10px;
   color: aquamarine;
 }
