@@ -897,7 +897,7 @@ const SlideCreator = {
     } = item;
 
     const miscInfo = SlideUtils.createElement("div", {
-      className: "misc-info itemMiscInfo",
+      className: "misc-info",
     });
 
     // Community Rating Section (IMDb)
