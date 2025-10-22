@@ -429,7 +429,7 @@ const SlideUtils = {
    */
   parseGenres(genresArray) {
     if (Array.isArray(genresArray) && genresArray.length > 0) {
-      return genresArray.slice(0, 3).join(" ▫️ "); //🔹
+      return genresArray.slice(0, 3).join(this.createSeparator().outerHTML);
     }
     return "No Genre Available";
   },
