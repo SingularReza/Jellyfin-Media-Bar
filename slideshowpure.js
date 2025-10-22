@@ -733,8 +733,8 @@ const VisibilityObserver = {
     if (!container) return;
 
     const isVisible =
-        (window.location.hash === "#/home.html" ||
-         window.location.hash === "#/home") &&
+      (window.location.hash === "#/home.html" ||
+        window.location.hash === "#/home") &&
       activeTab.getAttribute("data-index") === "0";
 
     container.style.display = isVisible ? "block" : "none";
@@ -855,8 +855,8 @@ const SlideCreator = {
 
     const genreElement = SlideUtils.createElement("div", {
       className: "genre",
+      innerHTML: SlideUtils.parseGenres(item.Genres)
     });
-    genreElement.innerHTML = SlideUtils.parseGenres(item.Genres);
 
     const buttonContainer = SlideUtils.createElement("div", {
       className: "button-container",
