@@ -888,139 +888,81 @@ const SlideCreator = {
    */
   createRatingInfo(item) {
     const {
-      CommunityRating: rating,
+      CommunityRating: communityRating,
       CriticRating: criticRating,
-      OfficialRating: age,
-      PremiereDate: date,
+      OfficialRating: ageRating,
+      PremiereDate: premiereDate,
       RunTimeTicks: runtime,
-      ChildCount: season,
+      ChildCount: seasonCount,
     } = item;
 
-    const ratingTest = SlideUtils.createElement("div", {
-      className: "rating-value",
+    const miscInfo = SlideUtils.createElement("div", {
+      className: "misc-info itemMiscInfo",
     });
 
-    const imdbLogo = SlideUtils.createElement("div", {
-      className: "imdb-logo",
-      innerHTML: CONFIG.IMAGE_SVG.imdbLogo,
-      style: {
-        width: "30px",
-        height: "30px",
-      },
-    });
-
-    ratingTest.appendChild(imdbLogo);
-
-    if (typeof rating === "number") {
-      const ratingSpan = document.createElement("span");
-      ratingSpan.textContent = rating.toFixed(1);
-      ratingSpan.style.marginRight = "5px";
-      ratingSpan.style.marginLeft = "5px";
-      ratingTest.appendChild(ratingSpan);
-    } else {
-      const naSpan = document.createElement("span");
-      naSpan.innerHTML = "N/A";
-      naSpan.style.color = "#fff9";
-      naSpan.style.marginRight = "5px";
-      naSpan.style.marginLeft = "5px";
-      ratingTest.appendChild(naSpan);
+    // Community Rating Section (IMDb)
+    if (typeof communityRating === "number") {
+      const container = SlideUtils.createElement("div", {
+        className: "star-rating-container",
+        innerHTML: `<span class="material-icons community-rating-star star" aria-hidden="true"></span>${communityRating.toFixed(1)}`,
+      });
+      miscInfo.appendChild(container);
+      miscInfo.appendChild(SlideUtils.createSeparator());
     }
 
-    ratingTest.appendChild(SlideUtils.createSeparator());
-
-    const tomatoRatingDiv = SlideUtils.createElement("div", {
-      className: "tomato-rating",
-    });
-
-    const tomatoLogo = SlideUtils.createElement("div", {
-      className: "tomato-logo",
-      innerHTML: CONFIG.IMAGE_SVG.tomatoLogo,
-      style: {
-        width: "18px",
-        height: "20px",
-      },
-    });
-
-    let valueElement = SlideUtils.createElement("span", {
-      style: {
-        marginLeft: "5px",
-        marginRight: "5px",
-      },
-    });
-
+    // Critic Rating Section (Rotten Tomatoes)
     if (typeof criticRating === "number") {
-      valueElement.textContent = `${criticRating}% `;
-    } else {
-      valueElement.style.color = "#fff9";
-      valueElement.textContent = "N/A ";
+      const svgIcon = criticRating < 60 ? CONFIG.IMAGE_SVG.rottenTomato : CONFIG.IMAGE_SVG.freshTomato;
+      const container = SlideUtils.createElement("div", {
+        className: "critic-rating",
+        innerHTML: `${svgIcon}${criticRating.toFixed(0)}%`,
+      })
+      miscInfo.appendChild(container);
+      miscInfo.appendChild(SlideUtils.createSeparator());
+    };
+
+    // Year Section
+    if (typeof premiereDate === "string" && !isNaN(new Date(premiereDate))) {
+      const container = SlideUtils.createElement("div", {
+        className: "date",
+        innerHTML: new Date(premiereDate).getFullYear(),
+      });
+      miscInfo.appendChild(container);
+      miscInfo.appendChild(SlideUtils.createSeparator());
+    };
+
+    // Age Rating Section
+    if (typeof ageRating === "string") {
+      const container = SlideUtils.createElement("div", {
+        className: "age-rating mediaInfoOfficialRating",
+        rating: ageRating,
+        ariaLabel: `Content rated ${ageRating}`,
+        title: `Rating: ${ageRating}`,
+        innerHTML: ageRating,
+      });
+      miscInfo.appendChild(container);
+      miscInfo.appendChild(SlideUtils.createSeparator());
+    };
+
+    // Runtime / Seasons Section
+    if (seasonCount !== undefined || runtime !== undefined) {
+      const container = SlideUtils.createElement("div", {
+        className: "runTime",
+      });
+      if (seasonCount) {
+        container.innerHTML = `${seasonCount} Season${seasonCount > 1 ? "s" : ""}`;
+      } else {
+        const milliseconds = runtime / 10000;
+        const currentTime = new Date();
+        const endTime = new Date(currentTime.getTime() + milliseconds);
+        const options = { hour: "2-digit", minute: "2-digit", hour12: false };
+        const formattedEndTime = endTime.toLocaleTimeString([], options);
+        container.innerText = `Ends at ${formattedEndTime}`;
+      }
+      miscInfo.appendChild(container);
     }
 
-    const criticLogo = SlideUtils.createElement("span", {
-      className: "critic-logo",
-      style: {
-        display: "flex",
-        width: "18",
-        height: "20",
-      },
-    });
-    criticLogo.innerHTML =
-      criticRating > 59
-        ? CONFIG.IMAGE_SVG.freshTomato
-        : CONFIG.IMAGE_SVG.rottenTomato;
-
-    tomatoRatingDiv.append(tomatoLogo, valueElement, criticLogo);
-    tomatoRatingDiv.appendChild(SlideUtils.createSeparator());
-
-    const ageRatingDiv = SlideUtils.createElement("div", {
-      className: "age-rating",
-    });
-    const ageSpan = document.createElement("span");
-    ageSpan.textContent = age || "N/A";
-    ageRatingDiv.appendChild(ageSpan);
-
-    const premiereDate = SlideUtils.createElement("div", {
-      className: "date",
-    });
-
-    const year = date ? new Date(date).getFullYear() : NaN;
-    if (isNaN(year)) {
-      const naSpan = SlideUtils.createElement(
-        "span",
-        {
-          style: { color: "#fff9" },
-        },
-        "N/A"
-      );
-      premiereDate.appendChild(naSpan);
-    } else {
-      premiereDate.textContent = year;
-    }
-
-    const runTimeElement = SlideUtils.createElement("div", {
-      className: "runTime",
-    });
-
-    if (season === undefined) {
-      const milliseconds = runtime / 10000;
-      const currentTime = new Date();
-      const endTime = new Date(currentTime.getTime() + milliseconds);
-      const options = { hour: "2-digit", minute: "2-digit", hour12: false };
-      const formattedEndTime = endTime.toLocaleTimeString([], options);
-      runTimeElement.textContent = `Ends at ${formattedEndTime}`;
-    } else {
-      runTimeElement.textContent = `${season} Season${season > 1 ? "s" : ""}`;
-    }
-
-    ratingTest.append(
-      tomatoRatingDiv,
-      premiereDate,
-      SlideUtils.createSeparator(),
-      ageRatingDiv,
-      SlideUtils.createSeparator(),
-      runTimeElement
-    );
-
-    return ratingTest;
+    return miscInfo;
   },
 
   /**
