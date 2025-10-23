@@ -76,7 +76,7 @@
   align-items: center;
 }
 
-.bar-loading h1 img {
+.bar-loading h1 div {
   width: 250px;
   max-height: 250px;
   display: block;
