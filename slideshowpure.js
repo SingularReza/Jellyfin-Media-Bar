@@ -1323,9 +1323,13 @@ const SlideshowManager = {
     if (STATE.slideshow.isPaused) {
       STATE.slideshow.slideInterval.stop();
       pauseButton.innerHTML = '<i class="material-icons">play_arrow</i>';
+      pauseButton.setAttribute("aria-label", "Play slideshow");
+      pauseButton.setAttribute("title", "Play slideshow");
     } else {
       STATE.slideshow.slideInterval.start();
       pauseButton.innerHTML = '<i class="material-icons">pause</i>';
+      pauseButton.setAttribute("aria-label", "Pause slideshow");
+      pauseButton.setAttribute("title", "Pause slideshow");
     }
   },
 
@@ -1502,6 +1506,8 @@ const initArrowNavigation = () => {
     className: "pause-button",
     innerHTML: '<i class="material-icons">pause</i>',
     tabIndex: "0",
+    "aria-label": "Pause slideshow",
+    title: "Pause slideshow",
     onclick: (e) => {
       e.preventDefault();
       e.stopPropagation();
