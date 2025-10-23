@@ -372,6 +372,7 @@
   width: auto;
   object-fit: contain;
   filter: brightness(1.5);
+  font-size: 4rem;
 }
 
 .plot-container {

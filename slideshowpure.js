@@ -809,7 +809,7 @@ const SlideCreator = {
     const logo = SlideUtils.createElement("img", {
       className: "logo high-quality",
       src: `${serverAddress}/Items/${itemId}/Images/Logo?quality=40`,
-      alt: "logo",
+      alt: item.Name,
       loading: "eager",
     });
 
