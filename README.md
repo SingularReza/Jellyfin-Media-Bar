@@ -1,5 +1,13 @@
 # Jellyfin-Media-Bar - Now with Play Now Function
 
+> [!NOTE]
+> The Media Bar is currently partly compatible with the Jellyfin 10.11.x update. We’re aware of the changes required to make it fully compatible and will be addressing them soon.
+> 
+> I’ll be away on vacation for a short while, so there will be a temporary delay in releasing the next update. I kindly ask that you refrain from opening new bug reports related to 10.11.x compatibility during this period — we’ve got it on our radar.
+> 
+> Thank you for your patience and understanding! The fixes will be rolled out shortly after I return.
+
+
 **IMP UPDATE — We have dropped support for the normal CSS version (for now). _(It still works, but there will be no further updates till the fullscreen mode is stabilized)_** 
 
 The fullscreen version has a new look (in beta), and support for different screen sizes has been added. For any visual goof-ups, please open a bug report, including the device being used and whether it is encountered in portrait or landscape mode.
